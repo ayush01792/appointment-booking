@@ -1,0 +1,39 @@
+name: backend-ci
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+concurrency:
+  group: backend-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - run: ./mvnw -B verify
+        env:
+          MAVEN_OPTS: -Xmx384m
+      - name: Build Docker image
+        run: docker build --tag appointment-booking:ci .
+      - name: Exercise disposable Docker demo
+        run: ./scripts/demo.sh --report target/demo-result.json --openapi target/openapi.json
+        env:
+          DEMO_SKIP_BUILD: 'true'
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: verification-reports
+          path: |
+            target/surefire-reports/
+            target/site/jacoco/
+            target/demo-result.json
+            target/openapi.json
+          retention-days: 14

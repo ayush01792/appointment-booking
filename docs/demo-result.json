@@ -1,0 +1,30 @@
+{
+  "verifiedAt": "2026-10-12T17:46:46.981044Z",
+  "checksPassed": 19,
+  "bookingRace": {
+    "requests": 8,
+    "created": 1,
+    "conflicts": 7
+  },
+  "checks": [
+    "Readiness includes PostgreSQL",
+    "Bootstrapped staff can log in",
+    "Customer 1 registration",
+    "Customer 1 login",
+    "Customer 2 registration",
+    "Customer 2 login",
+    "Staff publishes a future slot",
+    "Customer finds available slot",
+    "Eight simultaneous requests: one booking, seven conflicts",
+    "Another customer cannot cancel the booking",
+    "Booked slot cannot be withdrawn",
+    "Owner cancels the booking",
+    "Cancellation frees the slot for another customer",
+    "Unbooked slot can be withdrawn",
+    "Withdrawn slot cannot be booked",
+    "Customer cannot access staff metrics",
+    "Logout revokes the current token",
+    "Revoked token is rejected",
+    "OpenAPI specification is generated"
+  ]
+}
