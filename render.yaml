@@ -1,0 +1,52 @@
+# Free portfolio demo: PostgreSQL expires 30 days after creation.
+services:
+  - type: web
+    name: appointment-booking
+    runtime: docker
+    plan: free
+    region: singapore
+    repo: https://github.com/ayush01792/appointment-booking
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeployTrigger: checksPass
+    healthCheckPath: /actuator/health/readiness
+    maxShutdownDelaySeconds: 30
+    envVars:
+      - key: DB_URL
+        value: jdbc:postgresql://${RENDER_DB_HOST}:${RENDER_DB_PORT}/${RENDER_DB_NAME}
+      - key: RENDER_DB_HOST
+        fromDatabase:
+          name: appointment-booking-db
+          property: host
+      - key: RENDER_DB_PORT
+        fromDatabase:
+          name: appointment-booking-db
+          property: port
+      - key: RENDER_DB_NAME
+        fromDatabase:
+          name: appointment-booking-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: appointment-booking-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: appointment-booking-db
+          property: password
+      - key: BOOTSTRAP_STAFF_ENABLED
+        value: "true"
+      - key: BOOTSTRAP_STAFF_EMAIL
+        value: staff@example.test
+      - key: BOOTSTRAP_STAFF_PASSWORD
+        generateValue: true
+
+databases:
+  - name: appointment-booking-db
+    databaseName: appointments
+    user: appointments
+    plan: free
+    region: singapore
+    postgresMajorVersion: "17"
+    ipAllowList: []
