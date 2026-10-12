@@ -1,6 +1,6 @@
 # Verified initial release — 12 October 2026
 
-## Local release checks
+## Release checks
 
 - **24 automated tests passed:** 20 real HTTP/PostgreSQL integration tests and 4 unit tests. Zero failures, errors, or skips in a clean Maven 3.9.16 verification run on Java 21.
 - PostgreSQL **17.11** applied all three Flyway migrations and Hibernate validated the resulting schema.
@@ -9,10 +9,12 @@
 - Forty concurrent authentication-counter increments allowed exactly twenty. HTTP overflow returned 429 with Retry-After; spoofed forwarded addresses did not bypass the limit.
 - Cleanup removed 1,001 expired sessions in two bounded batches while preserving live sessions and booking history.
 - Stable pagination of 51 tied records, extreme page validation, readiness, staff-only metrics, and sanitized database failures passed.
-- JaCoCo measured **96.9% line coverage** (281 covered lines, 9 missed) and **81.9% branch coverage** (59 covered branches, 13 missed). The report is generated under `target/site/jacoco/`.
-- The final Docker image built successfully and runs as user `app`. Local image identity: `sha256:218329fed1d439c7b9d11a338c700203b8af7138b8f38f4a48015ad38aeb36fe`.
+- JaCoCo measured **96.9% line coverage** (283 covered lines, 9 missed) and **80.6% branch coverage** (58 covered branches, 14 missed). The report is generated under `target/site/jacoco/`.
+- GitHub CI built the final source Docker image successfully; the image runs as user `app`.
 - The real Docker app and PostgreSQL passed **19 end-to-end demo checks**, including the eight-request race. [Recorded JSON](demo-result.json) and [generated OpenAPI snapshot](openapi.json) are included. Demo credentials were generated at runtime and were neither printed nor recorded.
 - The disposable demo containers and database volume were removed by the script. The PayFlow Kind container was temporarily paused with user permission for this local demo and resumed afterward; it was not deleted or reconfigured.
+
+A Linux CI regression exposed nanosecond timestamps changing after PostgreSQL persisted them with microsecond precision. Creation, cancellation, and session expiry now use microsecond precision; the test clock deliberately includes nanoseconds to exercise this behavior across platforms.
 
 ## Reproduce
 
@@ -35,6 +37,6 @@ The test JVM is capped at 384 MB. Local Compose limits the app and database to 5
 
 ## CI and scope
 
-GitHub Actions verifies tests, builds the Docker image, exercises the disposable demo, and retains reports for 14 days. The actual run result is linked below after publication; workflow configuration by itself is not evidence of a passing run.
+GitHub Actions verifies tests, builds the Docker image, exercises the disposable demo, and retains reports for 14 days. [Run 38288741478](https://github.com/ayush01792/appointment-booking/actions/runs/38288741478) passed all steps for source commit `dec0b740c0ccc1bd0f9deb1faacc1be85c349893`: 24 tests, the Docker build, and 19 demo checks. The JSON and OpenAPI snapshots included here come from that run. The downloaded reports archive matched GitHub’s SHA-256 digest. Subsequent documentation updates do not change the tested application source.
 
 These checks establish correctness for the exercised scenarios, not a formal proof of every possible interleaving, an external security audit, or a production performance claim. Public hosting and production customer operation were not performed.
