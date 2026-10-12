@@ -17,6 +17,6 @@ Reviewed security, concurrency, correctness, database access, error responses, a
 
 Passwords use BCrypt; opaque tokens are generated from 256 random bits and only their hashes are stored. Registration cannot assign a staff role. Staff bootstrap refuses to promote a customer. Ownership comes from the authenticated principal, and clients cannot submit another account's identity to booking or scheduling endpoints.
 
-The release has 24 passing automated tests. Docker packaging and the disposable demonstration are recorded separately in verification notes. No known unresolved issue prevents the agreed portfolio workflow. This review is not an external penetration test or a proof of production readiness.
+The release has 26 passing automated tests. Docker packaging and the disposable demonstration are recorded separately in verification notes. No known unresolved issue prevents the agreed portfolio workflow. This review is not an external penetration test or a proof of production readiness.
 
 Deliberate limits: fixed-window rate limits permit a boundary burst and do not replace ingress-level abuse protection; forwarded headers require a trusted proxy configuration; offset pages can shift when the dataset changes; rescheduling is cancel-plus-book rather than atomic; booking retries do not use an idempotency key; email verification/recovery and public hosting remain outside the current release.

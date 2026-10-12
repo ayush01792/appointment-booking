@@ -1,6 +1,8 @@
-# Verified initial release — 12 October 2026
+# Project verification
 
-## Release checks
+The current frontend release passed 26 tests and 19 API demo checks. See [frontend verification](frontend-verification.md) for the latest CI and browser evidence.
+
+## Initial backend release — 12 October 2026
 
 - **24 automated tests passed:** 20 real HTTP/PostgreSQL integration tests and 4 unit tests. Zero failures, errors, or skips in a clean Maven 3.9.16 verification run on Java 21.
 - PostgreSQL **17.11** applied all three Flyway migrations and Hibernate validated the resulting schema.
@@ -37,8 +39,12 @@ The test JVM is capped at 384 MB. Local Compose limits the app and database to 5
 
 ## CI and scope
 
-GitHub Actions verifies tests, builds the Docker image, exercises the disposable demo, and retains reports for 14 days. [Run 38291578214](https://github.com/ayush01792/appointment-booking/actions/runs/38291578214) passed all steps for source commit `e06fbea292f69d8ab96f60c1b0d66c4bf2285dad`: 24 tests, the Docker build, and 19 demo checks. The JSON and OpenAPI snapshots included here come from that run. The downloaded reports archive matched GitHub’s SHA-256 digest. Subsequent documentation updates do not change the tested application source.
+GitHub Actions verifies tests, builds the Docker image, exercises the disposable demo, and retains reports for 14 days. [Run 38291578214](https://github.com/ayush01792/appointment-booking/actions/runs/38291578214) passed all steps for source commit `e06fbea292f69d8ab96f60c1b0d66c4bf2285dad`: 24 tests, the Docker build, and 19 demo checks. The latest snapshots are updated by the frontend release described below. The downloaded reports archive matched GitHub’s SHA-256 digest. Subsequent documentation updates do not change the tested application source.
 
 These checks establish correctness for the exercised scenarios, not a formal proof of every possible interleaving, an external security audit, or a production performance claim. The free Render portfolio demo was deployed and passed 19 checks over public HTTPS, including the eight-request booking race. [Hosted demo results](hosted-demo-result.json) and [hosting details](hosting-guide.md) are included. Production customer operation was not performed.
 
 The hosted API uses a relative OpenAPI server URL (`/`) so Swagger requests remain on HTTPS behind Render’s proxy. The HTTP integration test asserts this configuration.
+
+## Interactive frontend release — 13 October 2026
+
+The frontend extension passed **26 tests**, the Docker build, and all **19 API demo checks** in [CI run 38295531915](https://github.com/ayush01792/appointment-booking/actions/runs/38295531915) for commit `bef5d3166c395ec5d0c74c616b0413f2a6447650`. Java line coverage is **97.0%** (293 covered, 9 missed), and branch coverage is **80.6%** (58 covered, 14 missed). [Browser verification](frontend-verification.md) records the customer and staff walkthrough. The current JSON and OpenAPI snapshots come from this latest run.

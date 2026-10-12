@@ -4,7 +4,7 @@
 
 - Built a Java 21/Spring Boot appointment-booking API with PostgreSQL transactions, staff/customer authorization, Flyway migrations, and OpenAPI documentation.
 - Prevented duplicate active bookings with row locks and a partial unique index; verified that eight simultaneous HTTP requests produced one successful booking and seven conflicts in PostgreSQL tests.
-- Added atomic authentication rate limiting, bounded expired-session cleanup, readiness checks, and a Docker demo; validated the backend with 24 automated tests.
+- Added atomic authentication rate limiting, bounded expired-session cleanup, readiness checks, and a Docker demo; validated the backend with 26 automated tests.
 
 Keep these as engineering/correctness claims. No production traffic, throughput, latency, revenue, or customer adoption was measured.
 
@@ -16,7 +16,7 @@ Keep these as engineering/correctness claims. No production traffic, throughput,
 
 **Action:** Model slots and booking history separately; acquire the slot row lock inside a transaction; enforce one active booking with a PostgreSQL partial unique index; use a GiST exclusion constraint for overlapping staff slots. Apply the same slot lock to cancellation and withdrawal. Take staff/customer identities from bearer authentication and check ownership. Test races through the real HTTP server and PostgreSQL, not an in-memory database.
 
-**Result:** In the verified eight-request race, one booking succeeded and seven returned 409; the database contained exactly one active booking. A direct duplicate insert was also rejected. The final automated suite contains 24 passing tests, with zero skips in the recorded local release run.
+**Result:** In the verified eight-request race, one booking succeeded and seven returned 409; the database contained exactly one active booking. A direct duplicate insert was also rejected. The final automated suite contains 26 passing tests, with zero skips in the recorded local release run.
 
 ## Questions to prepare
 

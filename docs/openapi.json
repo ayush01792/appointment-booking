@@ -319,6 +319,26 @@
         }
       }
     },
+    "/api/auth/me": {
+      "get": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "me",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/staff/slots/{id}": {
       "delete": {
         "tags": [
@@ -410,6 +430,18 @@
             "format": "date-time"
           },
           "cancelledAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "staffId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endsAt": {
             "type": "string",
             "format": "date-time"
           }
