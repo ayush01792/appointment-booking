@@ -22,7 +22,7 @@ jobs:
         env:
           MAVEN_OPTS: -Xmx384m
       - name: Build Docker image
-        run: docker build --tag appointment-booking:ci .
+        run: docker build --tag appointment-booking:local .
       - name: Exercise disposable Docker demo
         run: ./scripts/demo.sh --report target/demo-result.json --openapi target/openapi.json
         env:
