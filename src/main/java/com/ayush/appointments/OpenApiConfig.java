@@ -11,6 +11,7 @@ class OpenApiConfig {
   OpenAPI api() {
     return new OpenAPI()
         .info(new Info().title("Appointment Booking API").version("0.1.0"))
+        .addServersItem(new io.swagger.v3.oas.models.servers.Server().url("/"))
         .components(
             new Components()
                 .addSecuritySchemes(

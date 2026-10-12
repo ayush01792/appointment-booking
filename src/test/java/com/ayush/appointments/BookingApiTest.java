@@ -395,6 +395,7 @@ class BookingApiTest {
     var docs = call(HttpMethod.GET, "/v3/api-docs", null, null);
     assertThat(docs.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(docs.getBody().get("paths").has("/api/bookings")).isTrue();
+    assertThat(docs.getBody().get("servers").get(0).get("url").asText()).isEqualTo("/");
   }
 
   @Test
