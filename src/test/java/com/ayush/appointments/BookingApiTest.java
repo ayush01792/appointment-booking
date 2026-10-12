@@ -27,7 +27,9 @@ class BookingApiTest {
     @org.springframework.context.annotation.Bean
     @org.springframework.context.annotation.Primary
     Clock testClock() {
-      return Clock.fixed(Instant.now(), ZoneOffset.UTC);
+      return Clock.fixed(
+          Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS).plusNanos(123456789),
+          ZoneOffset.UTC);
     }
   }
 
@@ -70,11 +72,11 @@ class BookingApiTest {
 
   String create(String email, Account.Role role) {
     accounts.saveAndFlush(new Account(email, encoder.encode(PASSWORD), role));
-    return call(
-            HttpMethod.POST, "/api/auth/login", null, Map.of("email", email, "password", PASSWORD))
-        .getBody()
-        .get("accessToken")
-        .asText();
+    var login =
+        call(
+            HttpMethod.POST, "/api/auth/login", null, Map.of("email", email, "password", PASSWORD));
+    assertThat(Instant.parse(login.getBody().get("expiresAt").asText()).getNano() % 1000).isZero();
+    return login.getBody().get("accessToken").asText();
   }
 
   ResponseEntity<JsonNode> call(HttpMethod method, String path, String token, Object body) {
@@ -102,6 +104,7 @@ class BookingApiTest {
     assertThat(call(HttpMethod.GET, search, customer, null).getBody().size()).isEqualTo(1);
     var booked = book(customer, slot);
     assertThat(booked.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(Instant.parse(booked.getBody().get("createdAt").asText()).getNano() % 1000).isZero();
     assertThat(call(HttpMethod.GET, search, customer, null).getBody().size()).isZero();
     assertThat(call(HttpMethod.GET, "/api/bookings", customer, null).getBody().size()).isEqualTo(1);
     String id = booked.getBody().get("id").asText();

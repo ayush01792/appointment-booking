@@ -25,7 +25,7 @@ class Booking {
     id = UUID.randomUUID();
     this.slotId = slotId;
     this.customerId = customerId;
-    createdAt = now;
+    createdAt = now.truncatedTo(java.time.temporal.ChronoUnit.MICROS);
   }
 
   protected Booking() {}

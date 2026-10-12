@@ -87,7 +87,8 @@ class SchedulingService {
     slots.lock(slotId).orElseThrow(ApiException::missing);
     // Load booking state only after acquiring the shared slot lock.
     Booking booking = bookings.findById(bookingId).orElseThrow(ApiException::missing);
-    if (booking.cancelledAt == null) booking.cancelledAt = clock.instant();
+    if (booking.cancelledAt == null)
+      booking.cancelledAt = clock.instant().truncatedTo(java.time.temporal.ChronoUnit.MICROS);
     return Views.BookingView.of(bookings.saveAndFlush(booking));
   }
 

@@ -8,6 +8,7 @@ Reviewed security, concurrency, correctness, database access, error responses, a
 | Concurrent exclusion-index inserts can deadlock | Serialize publication on the staff account row | Overlapping-publication PostgreSQL test |
 | Cancellation/withdrawal can invalidate a booking | Use the same slot lock for all three transitions | Withdrawal/booking race and cancellation/rebooking tests |
 | Timestamp ties destabilize offset paging | Add UUID tie breakers and matching indexes | 51 tied records span two pages without duplicates or omissions for an unchanged dataset |
+| Linux nanosecond clocks differ from PostgreSQL timestamp precision | Normalize persisted booking/expiry timestamps to microseconds | Regression clock deliberately supplies 123456789 nanoseconds; repeated cancellation stays identical |
 | Extreme page numbers can exceed JPA's integer offset | Validate the supported offset range before querying | HTTP requests with Integer.MAX_VALUE pages return 400 |
 | Authentication attempts were unlimited | PostgreSQL atomic per-address fixed-window counter | 40 concurrent increments allow exactly 20; HTTP overflow returns 429 |
 | Authentication or SQL failures can expose confusing errors | Sanitize database failures as 503; keep lock conflicts at 409 | Filter failure tests and real conflict responses |

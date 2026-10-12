@@ -71,7 +71,8 @@ class AuthService {
     byte[] bytes = new byte[32];
     random.nextBytes(bytes);
     String token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-    Instant expiry = clock.instant().plusSeconds(3600);
+    Instant expiry =
+        clock.instant().plusSeconds(3600).truncatedTo(java.time.temporal.ChronoUnit.MICROS);
     sessions.save(new Session(hash(token), account.id, expiry));
     return new Token(token, "Bearer", expiry);
   }
