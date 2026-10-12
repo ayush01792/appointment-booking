@@ -52,6 +52,11 @@ class AuthService {
             new Account(normalize(email), encoder.encode(password), Account.Role.CUSTOMER)));
   }
 
+  @Transactional(readOnly = true)
+  Views.AccountView current(UUID id) {
+    return Views.AccountView.of(accounts.findById(id).orElseThrow(ApiException::missing));
+  }
+
   static void validatePassword(String password) {
     if (password.getBytes(StandardCharsets.UTF_8).length > 72)
       throw ApiException.bad("Password must be at most 72 UTF-8 bytes");

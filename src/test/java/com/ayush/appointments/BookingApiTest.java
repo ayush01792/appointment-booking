@@ -98,6 +98,41 @@ class BookingApiTest {
   }
 
   @Test
+  void frontendIsPublicWhileAccountIdentityRequiresAuthentication() {
+    var page = http.getForEntity("/", String.class);
+    assertThat(page.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(page.getBody()).contains("Make time for", "/app.js", "/app.css");
+    assertThat(page.getHeaders().getFirst("Content-Security-Policy")).contains("script-src 'self'");
+    assertThat(http.getForEntity("/app.js", String.class).getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(http.getForEntity("/app.css", String.class).getStatusCode())
+        .isEqualTo(HttpStatus.OK);
+    assertThat(call(HttpMethod.GET, "/api/auth/me", null, null).getStatusCode())
+        .isEqualTo(HttpStatus.UNAUTHORIZED);
+    var me = call(HttpMethod.GET, "/api/auth/me", customer, null);
+    assertThat(me.getBody().get("email").asText()).isEqualTo("customer@example.test");
+    assertThat(me.getBody().get("role").asText()).isEqualTo("CUSTOMER");
+    assertThat(me.getBody().has("passwordHash")).isFalse();
+    assertThat(call(HttpMethod.GET, "/api/auth/me", staff, null).getBody().get("role").asText())
+        .isEqualTo("STAFF");
+  }
+
+  @Test
+  void bookingHistoryRetainsSlotDetailsAfterCancellationAndWithdrawal() {
+    UUID slot = publish();
+    var booked = book(customer, slot);
+    String id = booked.getBody().get("id").asText();
+    call(HttpMethod.POST, "/api/bookings/" + id + "/cancel", customer, null);
+    call(HttpMethod.DELETE, "/api/staff/slots/" + slot, staff, null);
+    var history = call(HttpMethod.GET, "/api/bookings", customer, null).getBody().get(0);
+    assertThat(Instant.parse(history.get("startsAt").asText())).isEqualTo(start);
+    assertThat(Instant.parse(history.get("endsAt").asText())).isEqualTo(start.plusSeconds(1800));
+    assertThat(history.get("staffId")).isEqualTo(booked.getBody().get("staffId"));
+    assertThat(history.get("cancelledAt").isTextual()).isTrue();
+    assertThat(call(HttpMethod.GET, "/api/bookings", otherCustomer, null).getBody().size())
+        .isZero();
+  }
+
+  @Test
   void completeWorkflowCancellationAndRebooking() {
     UUID slot = publish();
     String search = "/api/slots?from=" + start.minusSeconds(1) + "&to=" + start.plusSeconds(3600);

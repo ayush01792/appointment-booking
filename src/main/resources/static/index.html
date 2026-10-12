@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5f0">
+  <meta name="description" content="Make room for what matters. Browse available times, book a 30-minute appointment, and manage your schedule with Slot.">
+  <title>Slot — Make time for what matters</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<svg class="icon-library" aria-hidden="true"><defs>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+</defs></svg>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="Slot home"><span class="brand-mark">s</span>slot<span class="brand-dot">.</span></a>
+    <span class="sidebar-caption">YOUR TIME, CONSIDERED</span>
+    <nav aria-label="Main navigation">
+      <button class="nav-item active" data-view="browse"><svg><use href="#i-grid"/></svg><span id="browse-nav">Book a visit</span></button>
+      <button class="nav-item" data-view="history"><svg><use href="#i-calendar"/></svg><span id="history-nav">My appointments</span><span class="nav-badge" id="booking-count" hidden></span></button>
+      <button class="nav-item" data-action="publish" id="publish-nav" hidden><svg><use href="#i-plus"/></svg>Publish a time</button>
+    </nav>
+    <div class="sidebar-note"><span class="note-orbit" aria-hidden="true">✳</span><p>A little space.<br>A better day.</p><span>One appointment at a time.</span></div>
+    <a class="api-link" href="/swagger-ui/index.html" target="_blank" rel="noopener">Explore the API <span aria-hidden="true">↗</span></a>
+    <div class="sidebar-footer"><span class="online-dot"></span> Portfolio demo</div>
+  </aside>
+  <main>
+    <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumb">Book a visit</strong></div><div id="account-controls"><button class="button outline small" data-action="signin">Sign in <span aria-hidden="true">↗</span></button></div></header>
+    <section class="page-heading"><div><p class="eyebrow" id="page-eyebrow">LESS BACK-AND-FORTH. MORE LIVING.</p><h1 id="page-title">Make time for<br><em>what matters.</em></h1></div><div class="heading-note"><span class="live-label"><span class="online-dot"></span> A simpler way to schedule</span><p>Find a moment that works for you.<br>We’ll take care of the calendar.</p></div></section>
+    <section class="hero" id="hero"><div class="hero-copy"><span class="pill">GOOD DAYS START WITH A PLAN</span><h2>Your next appointment.<br>One less thing to think about.</h2><p>Choose your time. Book in a moment.<br>Get on with the rest of your day.</p><button class="button dark" data-action="get-started">Find my time <svg><use href="#i-arrow"/></svg></button><div class="hero-meta"><span><svg><use href="#i-clock"/></svg>30-minute visits</span><span><svg><use href="#i-check"/></svg>Flexible cancellation</span></div></div><div class="hero-art" aria-hidden="true"><div class="art-orbit"></div><div class="art-card"><span class="art-mini">A MOMENT FOR YOU</span><svg class="art-clock" viewBox="0 0 160 160"><circle cx="80" cy="80" r="64"/><path d="M80 35v45l29 18"/><circle cx="80" cy="80" r="5"/><path class="ticks" d="M80 20v8m0 104v8M20 80h8m104 0h8"/></svg><span class="art-time">30 minutes</span><span class="art-bottom">A little time. A lot of possibility.</span></div><span class="art-star">✳</span><span class="art-tag"><span class="online-dot"></span> Make room for yourself</span></div></section>
+    <section class="workspace-section" id="workspace" aria-labelledby="section-title">
+      <div class="section-header"><div><p class="eyebrow" id="section-eyebrow">YOUR CALENDAR, UNCOMPLICATED</p><h2 id="section-title">Find your next opening</h2></div><div class="section-actions"><button class="button outline small" data-action="refresh" id="refresh-button">Refresh</button><button class="button dark small" data-action="publish" id="publish-button" hidden>+ Publish a time</button></div></div>
+      <div id="browse-panel">
+        <div class="calendar-toolbar"><div><strong id="month-label"></strong><span class="timezone" id="timezone-label"></span></div><div class="calendar-controls"><label class="sr-only" for="date-picker">Choose a date</label><input type="date" id="date-picker"><button class="icon-button" data-action="previous-week" aria-label="Previous seven days">←</button><button class="icon-button" data-action="next-week" aria-label="Next seven days">→</button></div></div>
+        <div class="week-grid" id="week-grid" aria-label="Choose appointment date"></div>
+        <div class="slots-heading"><h3 id="day-label"></h3><span id="slots-count"></span></div>
+        <div id="slots-content" aria-live="polite"></div><button class="button outline load-more" id="slots-more" data-action="more-slots" hidden>Load more times</button>
+      </div>
+      <div id="history-panel" hidden><div class="history-filters" aria-label="Filter appointments"><button class="filter active" data-filter="upcoming">Upcoming</button><button class="filter" data-filter="all">All appointments</button><button class="filter" data-filter="cancelled">Cancelled</button></div><div id="history-content" aria-live="polite"></div><button class="button outline load-more" id="history-more" data-action="more-history" hidden>Load more appointments</button></div>
+    </section>
+    <section class="how-it-works" id="how-it-works"><div><span class="step-number">01</span><h3>Pick your moment</h3><p>A clear view of available times.<br>Find the one that fits your day.</p></div><div><span class="step-number">02</span><h3>Make it yours</h3><p>A quick confirmation.<br>Your time is reserved securely.</p></div><div><span class="step-number">03</span><h3>Plans can change</h3><p>Manage your visits in one place.<br>Cancel whenever you need to.</p></div></section>
+    <footer class="page-footer"><span>Thoughtfully simple. Built around your time.</span><span>Slot © <span id="year"></span> <span class="footer-dot">·</span> <a href="/swagger-ui/index.html">API documentation</a></span></footer>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<dialog id="auth-dialog" aria-labelledby="auth-title"><button class="dialog-close" data-action="close-dialog" aria-label="Close">×</button><span class="dialog-mark">s</span><p class="eyebrow">A LITTLE TIME FOR YOU</p><h2 id="auth-title">Welcome back.</h2><p class="dialog-intro" id="auth-intro">Sign in to find your next opening.</p><div class="auth-tabs"><button class="filter active" data-auth="signin">Sign in</button><button class="filter" data-auth="register">Create account</button></div><form id="auth-form"><label for="email">Email address</label><input id="email" type="email" name="email" placeholder="you@example.com" autocomplete="username" maxlength="254" required><label for="password">Password</label><input id="password" type="password" name="password" autocomplete="current-password" minlength="12" maxlength="72" required><p class="input-hint" id="password-hint">At least 12 characters, at most 72 UTF-8 bytes.</p><p class="form-error" id="auth-error" role="alert" hidden></p><button class="button dark full" type="submit" id="auth-submit">Sign in <svg><use href="#i-arrow"/></svg></button></form><p class="dialog-footnote">Customer accounts are open to everyone.<br>Staff sign in with their provisioned account.</p></dialog>
+<dialog id="action-dialog" aria-labelledby="action-title"><button class="dialog-close" data-action="close-dialog" aria-label="Close">×</button><span class="dialog-mark" id="action-mark">↗</span><p class="eyebrow" id="action-eyebrow">MAKE ROOM IN YOUR DAY</p><h2 id="action-title">Confirm your appointment</h2><div id="action-details"></div><form id="action-form"><div id="publish-fields" hidden><label for="publish-date">Date</label><input type="date" id="publish-date"><label for="publish-time">Start time</label><input type="time" id="publish-time" step="60"><p class="input-hint" id="publish-zone"></p></div><p class="form-error" id="action-error" role="alert" hidden></p><div class="dialog-buttons"><button class="button outline" type="button" data-action="close-dialog">Go back</button><button class="button dark" type="submit" id="action-submit">Confirm booking</button></div></form></dialog>
+</body>
+</html>

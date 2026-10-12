@@ -16,9 +16,17 @@ class Views {
     }
   }
 
-  record BookingView(UUID id, UUID slotId, Instant createdAt, Instant cancelledAt) {
-    static BookingView of(Booking b) {
-      return new BookingView(b.id, b.slotId, b.createdAt, b.cancelledAt);
+  record BookingView(
+      UUID id,
+      UUID slotId,
+      Instant createdAt,
+      Instant cancelledAt,
+      UUID staffId,
+      Instant startsAt,
+      Instant endsAt) {
+    static BookingView of(Booking b, Slot s) {
+      return new BookingView(
+          b.id, b.slotId, b.createdAt, b.cancelledAt, s.staffId, s.startsAt, s.endsAt);
     }
   }
 }

@@ -24,7 +24,7 @@ The script reports a failed check as a nonzero exit. Readiness has a five-minute
 
 ## Public portfolio demo
 
-Explore the [hosted API in Swagger UI](https://appointment-booking-17zj.onrender.com/swagger-ui/index.html). The free instance may take a minute or longer to wake up. The free database expires on **11 November 2026**. See [hosting details](docs/hosting-guide.md) for account access and limits.
+Open the [interactive appointment app](https://appointment-booking-17zj.onrender.com/), or explore the [API in Swagger UI](https://appointment-booking-17zj.onrender.com/swagger-ui/index.html). The free instance may take a minute or longer to wake up. The free database expires on **11 November 2026**. See [hosting details](docs/hosting-guide.md) for account access and limits.
 
 ## Run locally
 
@@ -59,6 +59,12 @@ export BOOTSTRAP_STAFF_PASSWORD
 ```
 
 The `read` command above uses zsh, the default macOS shell. For other shells, set the variable through your shell's secure input mechanism. After the first successful startup, stop the app, `unset BOOTSTRAP_STAFF_ENABLED BOOTSTRAP_STAFF_EMAIL BOOTSTRAP_STAFF_PASSWORD`, and restart normally. The bootstrap is idempotent for an existing staff email; it refuses to promote a customer or change an existing password. For Docker, pass these three variables explicitly to the app service with a local Compose override. They are intentionally absent from committed Compose configuration.
+
+## Interactive frontend
+
+Open `/` on the running app. Customers can register, sign in, browse a seven-day calendar, choose a time, confirm a booking, and cancel appointments from their history. Staff can publish 30-minute times and withdraw unbooked openings. Times use the browser’s local timezone. Lists support loading additional pages.
+
+The frontend uses the same-origin API, with no external scripts, fonts, UI framework, or additional build step. Bearer tokens are stored in `sessionStorage` for this tab and revalidated through `GET /api/auth/me` on reload; logout revokes the token. A Content Security Policy restricts scripts and connections to this origin. Appointment responses include slot times so cancelled history stays readable.
 
 ## API walkthrough
 
@@ -150,4 +156,4 @@ Versions were checked against official sources on 12 October 2026 and resolved f
 
 ## Scope and next steps
 
-This is a portfolio backend, with no frontend, payment flow, emails, Kafka, Redis, or Kubernetes. It is independent of PayFlow. Before operating it as a public service, add verified email/recovery, deployment-specific secret/TLS management, backup/restore procedures, and edge-level abuse controls. Accounts cannot currently be deleted, staff cannot cancel on a customer's behalf, and public deployment has not been tested. Expired sessions and rate-limit windows are already purged automatically in bounded batches.
+This is a portfolio scheduling app with a responsive vanilla JavaScript frontend served by Spring Boot. Payment processing, email notifications, Kafka, Redis, and Kubernetes are outside its scope. It is independent of PayFlow. Before operating it as a public service, add verified email/recovery, deployment-specific secret/TLS management, backup/restore procedures, and edge-level abuse controls. Accounts cannot currently be deleted, staff cannot cancel on a customer's behalf, and the free Render deployment has been exercised with sample accounts. Expired sessions and rate-limit windows are already purged automatically in bounded batches.

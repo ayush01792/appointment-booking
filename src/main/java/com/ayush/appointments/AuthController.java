@@ -31,6 +31,11 @@ class AuthController {
     return auth.login(body.email(), body.password());
   }
 
+  @GetMapping("/me")
+  Views.AccountView me(org.springframework.security.core.Authentication authentication) {
+    return auth.current((java.util.UUID) authentication.getPrincipal());
+  }
+
   @PostMapping("/logout")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   void logout(@RequestHeader("Authorization") String header) {

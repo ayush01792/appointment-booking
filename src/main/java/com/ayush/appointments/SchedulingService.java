@@ -67,29 +67,31 @@ class SchedulingService {
     if (bookings.existsBySlotIdAndCancelledAtIsNull(slotId))
       throw ApiException.conflict("Slot is already booked");
     return Views.BookingView.of(
-        bookings.saveAndFlush(new Booking(slotId, customer, clock.instant())));
+        bookings.saveAndFlush(new Booking(slotId, customer, clock.instant())), slot);
   }
 
   @Transactional(readOnly = true)
   List<Views.BookingView> mine(UUID customer, int page) {
     if ((page < 0 || page > Integer.MAX_VALUE / 50))
       throw ApiException.bad("Page is outside the supported range");
-    return bookings
-        .findByCustomerIdOrderByCreatedAtDescIdDesc(customer, PageRequest.of(page, 50))
-        .stream()
-        .map(Views.BookingView::of)
-        .toList();
+    var history =
+        bookings.findByCustomerIdOrderByCreatedAtDescIdDesc(customer, PageRequest.of(page, 50));
+    var byId = new HashMap<UUID, Slot>();
+    slots
+        .findAllById(history.stream().map(b -> b.slotId).distinct().toList())
+        .forEach(s -> byId.put(s.id, s));
+    return history.stream().map(b -> Views.BookingView.of(b, byId.get(b.slotId))).toList();
   }
 
   @Transactional
   Views.BookingView cancel(UUID customer, UUID bookingId) {
     UUID slotId = bookings.ownedSlot(bookingId, customer).orElseThrow(ApiException::missing);
-    slots.lock(slotId).orElseThrow(ApiException::missing);
+    Slot slot = slots.lock(slotId).orElseThrow(ApiException::missing);
     // Load booking state only after acquiring the shared slot lock.
     Booking booking = bookings.findById(bookingId).orElseThrow(ApiException::missing);
     if (booking.cancelledAt == null)
       booking.cancelledAt = clock.instant().truncatedTo(java.time.temporal.ChronoUnit.MICROS);
-    return Views.BookingView.of(bookings.saveAndFlush(booking));
+    return Views.BookingView.of(bookings.saveAndFlush(booking), slot);
   }
 
   @Transactional

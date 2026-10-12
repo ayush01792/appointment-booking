@@ -1,11 +1,12 @@
 # Public appointment-booking demo
 
+- Frontend: https://appointment-booking-17zj.onrender.com/
 - API explorer: https://appointment-booking-17zj.onrender.com/swagger-ui/index.html
 - OpenAPI: https://appointment-booking-17zj.onrender.com/v3/api-docs
 - Readiness: https://appointment-booking-17zj.onrender.com/actuator/health/readiness
 - Repository: https://github.com/ayush01792/appointment-booking
 
-This is a backend portfolio demo. Use Swagger UI to register a customer, log in, and supply the returned bearer token with **Authorize**. Follow the repository's API walkthrough. Staff sign-in uses `staff@example.test`; its generated password is available only in your Render service's **Environment → BOOTSTRAP_STAFF_PASSWORD**. Keep that password private.
+Use the frontend to register a customer, sign in, browse published times, book, and cancel your appointments. Swagger UI remains available for inspecting the API. Staff sign-in uses `staff@example.test`; its generated password is available only in your Render service's **Environment → BOOTSTRAP_STAFF_PASSWORD**. Keep that password private.
 
 The API and PostgreSQL use Render's free plans in Singapore. The database accepts internal connections only. The application binds to Render's assigned port, applies Flyway migrations, and uses database readiness for health checks. Future application deployments wait for GitHub checks to pass. The Blueprint is committed as `render.yaml`.
 
