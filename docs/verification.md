@@ -9,7 +9,7 @@
 - Forty concurrent authentication-counter increments allowed exactly twenty. HTTP overflow returned 429 with Retry-After; spoofed forwarded addresses did not bypass the limit.
 - Cleanup removed 1,001 expired sessions in two bounded batches while preserving live sessions and booking history.
 - Stable pagination of 51 tied records, extreme page validation, readiness, staff-only metrics, and sanitized database failures passed.
-- JaCoCo measured **96.9% line coverage** (283 covered lines, 9 missed) and **80.6% branch coverage** (58 covered branches, 14 missed). The report is generated under `target/site/jacoco/`.
+- JaCoCo measured **96.9% line coverage** (284 covered lines, 9 missed) and **80.6% branch coverage** (58 covered branches, 14 missed). The report is generated under `target/site/jacoco/`.
 - GitHub CI built the final source Docker image successfully; the image runs as user `app`.
 - The real Docker app and PostgreSQL passed **19 end-to-end demo checks**, including the eight-request race. [Recorded JSON](demo-result.json) and [generated OpenAPI snapshot](openapi.json) are included. Demo credentials were generated at runtime and were neither printed nor recorded.
 - The disposable demo containers and database volume were removed by the script. The PayFlow Kind container was temporarily paused with user permission for this local demo and resumed afterward; it was not deleted or reconfigured.
@@ -37,6 +37,8 @@ The test JVM is capped at 384 MB. Local Compose limits the app and database to 5
 
 ## CI and scope
 
-GitHub Actions verifies tests, builds the Docker image, exercises the disposable demo, and retains reports for 14 days. [Run 38288741478](https://github.com/ayush01792/appointment-booking/actions/runs/38288741478) passed all steps for source commit `dec0b740c0ccc1bd0f9deb1faacc1be85c349893`: 24 tests, the Docker build, and 19 demo checks. The JSON and OpenAPI snapshots included here come from that run. The downloaded reports archive matched GitHub’s SHA-256 digest. Subsequent documentation updates do not change the tested application source.
+GitHub Actions verifies tests, builds the Docker image, exercises the disposable demo, and retains reports for 14 days. [Run 38291578214](https://github.com/ayush01792/appointment-booking/actions/runs/38291578214) passed all steps for source commit `e06fbea292f69d8ab96f60c1b0d66c4bf2285dad`: 24 tests, the Docker build, and 19 demo checks. The JSON and OpenAPI snapshots included here come from that run. The downloaded reports archive matched GitHub’s SHA-256 digest. Subsequent documentation updates do not change the tested application source.
 
-These checks establish correctness for the exercised scenarios, not a formal proof of every possible interleaving, an external security audit, or a production performance claim. Public hosting and production customer operation were not performed.
+These checks establish correctness for the exercised scenarios, not a formal proof of every possible interleaving, an external security audit, or a production performance claim. The free Render portfolio demo was deployed and passed 19 checks over public HTTPS, including the eight-request booking race. [Hosted demo results](hosted-demo-result.json) and [hosting details](hosting-guide.md) are included. Production customer operation was not performed.
+
+The hosted API uses a relative OpenAPI server URL (`/`) so Swagger requests remain on HTTPS behind Render’s proxy. The HTTP integration test asserts this configuration.

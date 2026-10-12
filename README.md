@@ -22,6 +22,10 @@ To save a replayable result and API specification:
 
 The script reports a failed check as a nonzero exit. Readiness has a five-minute default timeout; `DEMO_READY_TIMEOUT_SECONDS` adjusts it for slower machines. Other API requests default to a 60-second client timeout, configurable with `DEMO_REQUEST_TIMEOUT_SECONDS`. `DEMO_SKIP_BUILD=true` can reuse an image you have just built from the current source. See [the recorded demo](docs/demo-result.json), [OpenAPI snapshot](docs/openapi.json), and [interview notes](docs/interview-notes.md), and [release review](docs/code-review.md).
 
+## Public portfolio demo
+
+Explore the [hosted API in Swagger UI](https://appointment-booking-17zj.onrender.com/swagger-ui/index.html). The free instance may take a minute or longer to wake up. The free database expires on **11 November 2026**. See [hosting details](docs/hosting-guide.md) for account access and limits.
+
 ## Run locally
 
 Requirements: Java 21, Docker Desktop running, and access to Maven Central. The checked-in Maven wrapper downloads Maven 3.9.16; the build requires Java 21 exactly; a global Maven installation is unnecessary.
